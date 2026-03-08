@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space ID Card Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: radial-gradient(circle at center, #00FF00 0%, #00FF 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        /* Efek Bintang Bergerak */
+        .stars {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.5;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .space-gradient {
+            background: linear-gradient(90deg, #00FF00 0%, #00f2fe 100%);
+        }
+    </style>
+</head>
+<body class="text-gray-100 p-6 flex flex-col items-center">
+    <div class="stars"></div>
+
+    <header class="text-center mb-10">
+        <h1 class="text-4xl font-bold tracking-widest uppercase space-gradient bg-clip-text text-transparent">Astronaut Manifest</h1>
+        <p class="text-blue-300 text-sm mt-2">Daftarkan identitas galaksi Anda sekarang.</p>
+    </header>
+
+    <main class="w-full max-w-4xl grid md:grid-cols-2 gap-8">
+        <section class="glass p-8 rounded-3xl shadow-2xl">
+            <h2 class="text-xl font-semibold mb-6 flex items-center gap-2">
+                🚀 Data Awak Kapal
+            </h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-blue-300 mb-1">Nama Pilot</label>
+                    <input type="text" id="inputNama" placeholder="Contoh: Neil Armstrong" 
+                        class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-400 transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-blue-300 mb-1">Usia Cahaya</label>
+                    <input type="number" id="inputUmur" placeholder="Dalam tahun Bumi" 
+                        class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-400 transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-blue-300 mb-1">Spesialisasi</label>
+                    <input type="text" id="inputPekerjaan" placeholder="Contoh: Navigator / Engineer" 
+                        class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-400 transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-blue-300 mb-1">Misi Sampingan (Hobi)</label>
+                    <input type="text" id="inputHobi" placeholder="Contoh: Stargazing" 
+                        class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-400 transition-all">
+                </div>
+                <button onclick="generateCard()" 
+                    class="w-full mt-6 space-gradient py-4 rounded-xl font-bold text-black uppercase tracking-tighter hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-cyan-500/20">
+                    Generate Identity Card
+                </button>
+            </div>
+        </section>
+
+        <section class="flex flex-col items-center justify-center">
+            <div id="idCard" class="hidden w-full max-w-sm glass rounded-2xl overflow-hidden border-t-2 border-cyan-400 relative">
+                <div class="absolute top-2 right-4 opacity-20 text-xs">ID-SYSTEM-V.2</div>
+                
+                <div class="p-8">
+                    <div class="w-24 h-24 bg-gradient-to-tr from-cyan-500 to-blue-800 rounded-full mx-auto mb-6 flex items-center justify-center border-4 border-white/10 shadow-xl">
+                        <span id="initials" class="text-3xl font-bold text-white">??</span>
+                    </div>
+                    
+                    <div class="text-center space-y-4">
+                        <div>
+                            <p class="text-[10px] text-blue-400 uppercase tracking-[0.2em]">Full Name</p>
+                            <h3 id="resNama" class="text-2xl font-bold truncate">Explorer Name</h3>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 border-t border-white/10 pt-4">
+                            <div class="text-left">
+                                <p class="text-[10px] text-blue-400 uppercase tracking-widest">Role</p>
+                                <p id="resPekerjaan" class="font-medium text-sm">Specialist</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[10px] text-blue-400 uppercase tracking-widest">Age</p>
+                                <p id="resUmur" class="font-medium text-sm">--</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white/5 p-3 rounded-lg mt-4">
+                            <p class="text-[10px] text-blue-400 uppercase tracking-widest mb-1">Current Mission</p>
+                            <p id="resHobi" class="italic text-sm text-gray-300">"Exploring the unknown..."</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white/10 py-2 px-8 flex justify-between items-center">
+                    <div class="h-4 w-32 bg-slate-800 rounded-sm overflow-hidden flex gap-1">
+                        <div class="w-2 bg-white/20 h-full"></div><div class="w-1 bg-white/20 h-full"></div>
+                        <div class="w-4 bg-white/20 h-full"></div><div class="w-1 bg-white/20 h-full"></div>
+                    </div>
+                    <span class="text-[8px] font-mono text-cyan-300">CERTIFIED PILOT</span>
+                </div>
+            </div>
+            
+            <div id="placeholder" class="text-gray-500 italic text-center animate-pulse">
+                Menunggu input data awak kapal...
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function generateCard() {
+            // Ambil Value
+            const nama = document.getElementById('inputNama').value;
+            const umur = document.getElementById('inputUmur').value;
+            const pekerjaan = document.getElementById('inputPekerjaan').value;
+            const hobi = document.getElementById('inputHobi').value;
+
+            if(!nama || !umur || !pekerjaan) {
+                alert("Mohon lengkapi data navigasi Anda!");
+                return;
+            }
+
+            // Update Tampilan Card
+            document.getElementById('resNama').innerText = nama;
+            document.getElementById('resUmur').innerText = umur + " Years";
+            document.getElementById('resPekerjaan').innerText = pekerjaan;
+            document.getElementById('resHobi').innerText = `"${hobi}"`;
+            
+            // Ambil Inisial
+            const initial = nama.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+            document.getElementById('initials').innerText = initial;
+
+            // Tampilkan Card, Sembunyikan Placeholder
+            document.getElementById('idCard').classList.remove('hidden');
+            document.getElementById('placeholder').classList.add('hidden');
+            
+            // Animasi masuk
+            document.getElementById('idCard').classList.add('animate-bounce-short');
+        }
+    </script>
+</body>
+</html>
